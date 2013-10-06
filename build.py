@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import codecs
 import shutil
 import json
 import os
@@ -12,9 +13,8 @@ def pre_check():
         if not os.path.exists(p):
             return False, p
     return True, None
-
 def write_file(file_name, content):
-    fp = open(file_name, 'w')
+    fp = codecs.open(file_name, mode='w', encoding='utf-8')
     fp.write(content)
     fp.close()
 
@@ -35,7 +35,7 @@ def new_post():
     except:
         pass
 
-    fp = open('./blogs/' + file_name + '.md', 'w')
+    fp = codecs.open('./blogs/' + file_name + '.md', mode='w', encoding='utf-8')
     title = '<!-- '+ title +' -->'
     date_str = '<!-- ' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ' -->'
     fp.write(title + '\n')
@@ -49,7 +49,7 @@ def build():
     os.mkdir('./gen')
     blogs = []
     for f in glob.glob('./blogs/*.md'):
-        fp = open(f)
+        fp = codecs.open(f, mode='r', encoding='utf-8')
         content = fp.read()
         fp.close()
         if len(content.split('\n')) < 3:
@@ -74,7 +74,7 @@ def build():
         if len(html) == 0:
             continue
         #generate blog html
-        blog_fp = open('./template/blog.html')
+        blog_fp = codecs.open('./template/blog.html', mode='r', encoding='utf-8')
         content = blog_fp.read()
         content = content.replace('{{ blog }}', html)
 
@@ -85,7 +85,7 @@ def build():
         blogs.append((file_name + '.html', title, ts))
         blog_fp.close()
     #generate index html
-    index_fp = open('./template/index.html')
+    index_fp = codecs.open('./template/index.html', mode='r', encoding='utf-8')
     content = index_fp.read()
     blogs.sort(key=lambda b: b[2])
     blogs.reverse()
